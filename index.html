@@ -199,8 +199,21 @@
         .readonly-bg {
             background-color: #f2f2ea;
         }
+        .sub-check-group {
+            margin-left: 24px;
+            margin-top: 8px;
+            padding: 12px;
+            background: #f9fdf7;
+            border-radius: 20px;
+            border-left: 3px solid #4caf50;
+        }
+        .sub-check-group label {
+            background: white;
+            border: 1px solid #cde2c4;
+            font-weight: normal;
+        }
 
-        /* barra de ações e info registros */
+        /* barra de info e ações */
         .info-bar {
             background: #fef9e6;
             padding: 12px 18px;
@@ -327,10 +340,39 @@
                 <div class="form-row"><label>Infraestrutura</label><div class="check-group"><label><input type="checkbox" name="infra" value="Cercamento"> Cercamento</label><label><input type="checkbox" name="infra" value="Estufa"> Estufa</label><label><input type="checkbox" name="infra" value="Irrigação"> Irrigação</label><label><input type="checkbox" name="infra" value="Galpão"> Galpão</label></div></div>
             </fieldset>
         </div>
-        <!-- Aba 3 -->
+        <!-- Aba 3 - Produção com opções de hortaliças dinâmicas -->
         <div id="tab3" class="tab-content">
             <fieldset><legend>🌾 Produção e manejo</legend>
-                <div class="form-row"><label>Principais cultivos</label><div class="check-group"><label><input type="checkbox" name="cultivos" value="Hortaliças"> Hortaliças</label><label><input type="checkbox" name="cultivos" value="Frutíferas"> Frutíferas</label><label><input type="checkbox" name="cultivos" value="Medicinais"> Medicinais</label><label><input type="checkbox" name="cultivos" value="Outros"> Outros: <input type="text" name="cultivos_outros" style="width:100px; margin-left:6px;"></label></div></div>
+                <div class="form-row">
+                    <label>Principais cultivos</label>
+                    <div class="check-group" id="cultivosGroup">
+                        <label><input type="checkbox" name="cultivos" value="Hortaliças" id="chkHortalicas"> Hortaliças</label>
+                        <label><input type="checkbox" name="cultivos" value="Frutíferas"> Frutíferas</label>
+                        <label><input type="checkbox" name="cultivos" value="Medicinais"> Medicinais</label>
+                        <label><input type="checkbox" name="cultivos" value="Outros"> Outros: <input type="text" name="cultivos_outros" style="width:100px; margin-left:6px;"></label>
+                    </div>
+                </div>
+                <!-- Área para detalhamento das hortaliças (inicialmente oculta) -->
+                <div id="hortalicasDetail" style="display: none; margin-top: 12px; margin-bottom: 20px; padding: 12px; background: #f6fef2; border-radius: 20px; border: 1px solid #cfe3cd;">
+                    <label style="font-weight: 600; margin-bottom: 8px;">🌿 Quais hortaliças são cultivadas?</label>
+                    <div class="check-group" id="hortalicasList">
+                        <label><input type="checkbox" name="hortalicas_espec" value="Alface"> Alface</label>
+                        <label><input type="checkbox" name="hortalicas_espec" value="Couve"> Couve</label>
+                        <label><input type="checkbox" name="hortalicas_espec" value="Cheiro-verde (cebolinha e coentro)"> Cheiro-verde (cebolinha e coentro)</label>
+                        <label><input type="checkbox" name="hortalicas_espec" value="Salsa"> Salsa</label>
+                        <label><input type="checkbox" name="hortalicas_espec" value="Rúcula"> Rúcula</label>
+                        <label><input type="checkbox" name="hortalicas_espec" value="Tomate"> Tomate</label>
+                        <label><input type="checkbox" name="hortalicas_espec" value="Pimentas"> Pimentas</label>
+                        <label><input type="checkbox" name="hortalicas_espec" value="Pimentão"> Pimentão</label>
+                        <label><input type="checkbox" name="hortalicas_espec" value="Abóbora"> Abóbora</label>
+                        <label><input type="checkbox" name="hortalicas_espec" value="Pepino"> Pepino</label>
+                        <label><input type="checkbox" name="hortalicas_espec" value="Maxixe"> Maxixe</label>
+                        <label><input type="checkbox" name="hortalicas_espec" value="Cenoura"> Cenoura</label>
+                        <label><input type="checkbox" name="hortalicas_espec" value="Outra" id="outraHortCheck"> Outra: 
+                            <input type="text" name="hortalicas_outra_text" id="outraHortText" placeholder="especifique" style="width:120px; margin-left:5px;" disabled>
+                        </label>
+                    </div>
+                </div>
                 <div class="form-row"><label>Sistema de cultivo</label><input type="text" name="sistema_cultivo"></div>
                 <div class="form-row"><label>Fertilizantes</label><div class="check-group"><label><input type="checkbox" name="fertilizantes" value="Orgânicos"> Orgânicos</label><label><input type="checkbox" name="fertilizantes" value="Químicos"> Químicos</label></div></div>
                 <div class="form-row"><label>Controle de pragas</label><div class="check-group"><label><input type="checkbox" name="controle_pragas" value="Biológico"> Biológico</label><label><input type="checkbox" name="controle_pragas" value="Químico"> Químico</label><label><input type="checkbox" name="controle_pragas" value="Manejo ecológico"> Manejo ecológico</label></div></div>
@@ -338,13 +380,21 @@
                 <div class="form-row"><label>Periodicidade</label><select name="periodicidade"><option>Contínua</option><option>Sazonal</option></select></div>
             </fieldset>
         </div>
-        <!-- Aba 4 -->
+        <!-- Aba 4 - Mão de obra com alteração na assistência técnica -->
         <div id="tab4" class="tab-content">
             <fieldset><legend>👥 Mão de obra e organização</legend>
                 <div class="form-row"><label>Quem trabalha</label><div class="check-group"><label><input type="checkbox" name="mao_obra" value="Familiar"> Familiar</label><label><input type="checkbox" name="mao_obra" value="Contratado"> Contratado</label><label><input type="checkbox" name="mao_obra" value="Voluntários"> Voluntários</label></div></div>
                 <div class="form-row"><label>Número de pessoas</label><input type="number" name="num_pessoas" min="0"></div>
                 <div class="form-row"><label>Associação/cooperativa</label><select name="associacao"><option>Não</option><option>Sim, associação</option><option>Sim, cooperativa</option><option>Coletivo informal</option></select></div>
-                <div class="form-row"><label>Assistência técnica</label><select name="assistencia_tecnica"><option>Nenhuma</option><option>Pública (ATER/Emater)</option><option>Privada</option><option>ONG/Universidade</option><option>Eventual</option></select></div>
+                <div class="form-row"><label>Assistência técnica</label>
+                    <select name="assistencia_tecnica">
+                        <option>Nenhuma</option>
+                        <option>Pública (Prefeitura/Ruratins)</option>   <!-- ALTERADO -->
+                        <option>Privada</option>
+                        <option>ONG/Universidade</option>
+                        <option>Eventual</option>
+                    </select>
+                </div>
             </fieldset>
         </div>
         <!-- Aba 5 -->
@@ -390,7 +440,7 @@
         <button type="button" id="exportAllBtn" class="btn-action btn-export-all">📎 Exportar TODOS os registros</button>
         <button type="button" id="clearFormBtn" class="btn-action btn-secondary">🗑️ Limpar formulário</button>
     </div>
-    <small>✔️ Preencha os dados e clique em "Salvar este registro" para armazenar no navegador. Depois use "Exportar TODOS os registros" para gerar um CSV com todos os diagnósticos salvos. Os dados ficam salvos localmente até serem apagados.</small>
+    <small>✔️ Preencha os dados e clique em "Salvar este registro". Depois use "Exportar TODOS os registros" para gerar um CSV com todos os diagnósticos. Os dados ficam salvos localmente até serem apagados.</small>
 </div>
 
 <script>
@@ -463,6 +513,40 @@
         );
     }
 
+    // ====================== CONTROLE DA ÁREA DE HORTALIÇAS =======================
+    const hortalicasCheck = document.getElementById('chkHortalicas');
+    const hortalicasDetailDiv = document.getElementById('hortalicasDetail');
+    const outraHortCheck = document.getElementById('outraHortCheck');
+    const outraHortText = document.getElementById('outraHortText');
+
+    function toggleHortalicasDetail() {
+        if (hortalicasCheck.checked) {
+            hortalicasDetailDiv.style.display = 'block';
+        } else {
+            hortalicasDetailDiv.style.display = 'none';
+            // limpar seleções quando desmarcar
+            const hortChecks = document.querySelectorAll('input[name="hortalicas_espec"]');
+            hortChecks.forEach(cb => cb.checked = false);
+            outraHortText.value = '';
+            outraHortText.disabled = true;
+        }
+    }
+
+    function handleOutraHort() {
+        if (outraHortCheck.checked) {
+            outraHortText.disabled = false;
+        } else {
+            outraHortText.disabled = true;
+            outraHortText.value = '';
+        }
+    }
+
+    hortalicasCheck.addEventListener('change', toggleHortalicasDetail);
+    outraHortCheck.addEventListener('change', handleOutraHort);
+    // inicialização
+    toggleHortalicasDetail();
+    handleOutraHort();
+
     // ====================== COLETA DE DADOS DO FORMULÁRIO =======================
     function collectFormData() {
         const form = document.getElementById('diagnosticForm');
@@ -481,13 +565,37 @@
         for (let [name, vals] of checkboxGroups.entries()) {
             data[name] = vals.join('; ');
         }
-        // lat/lon/utm explícitos
+        // lat/lon/utm
         data['latitude'] = document.getElementById('lat').value;
         data['longitude'] = document.getElementById('lon').value;
         data['utm_zone'] = document.getElementById('utmZone').value;
         data['utm_easting'] = document.getElementById('easting').value;
         data['utm_northing'] = document.getElementById('northing').value;
-        // mescla cultivos_outros
+        
+        // Tratamento especial: se hortaliças estiver marcada, coletar as específicas
+        if (hortalicasCheck.checked) {
+            let hortEspec = [];
+            const hortChecks = document.querySelectorAll('input[name="hortalicas_espec"]:checked');
+            hortChecks.forEach(cb => {
+                if (cb.value === 'Outra') {
+                    if (outraHortText.value.trim() !== '')
+                        hortEspec.push(`Outra: ${outraHortText.value.trim()}`);
+                    else
+                        hortEspec.push('Outra (não especificada)');
+                } else {
+                    hortEspec.push(cb.value);
+                }
+            });
+            if (hortEspec.length > 0) {
+                data['hortalicas_detalhadas'] = hortEspec.join('; ');
+            } else {
+                data['hortalicas_detalhadas'] = 'Sim (sem detalhes)';
+            }
+        } else {
+            data['hortalicas_detalhadas'] = '';
+        }
+        
+        // cultivos_outros merge
         if (data.cultivos_outros && data.cultivos_outros.trim() !== "") {
             let cult = data.cultivos || "";
             if (cult) cult += "; Outros: " + data.cultivos_outros;
@@ -495,7 +603,6 @@
             data.cultivos = cult;
         }
         delete data.cultivos_outros;
-        // adiciona timestamp
         data['data_hora_registro'] = new Date().toLocaleString('pt-BR');
         return data;
     }
@@ -520,7 +627,7 @@
     }
 
     function clearAllRecords() {
-        if (confirm("Tem certeza que deseja apagar TODOS os registros salvos? Esta ação não pode ser desfeita.")) {
+        if (confirm("Tem certeza que deseja apagar TODOS os registros salvos?")) {
             localStorage.removeItem(STORAGE_KEY);
             updateSavedCount();
             alert("Todos os registros foram removidos.");
@@ -539,12 +646,11 @@
             alert("Nenhum registro salvo para exportar.");
             return;
         }
-        // Definir cabeçalhos fixos com base nos campos esperados (mapeamento completo)
         const headers = [
             "nome_responsavel", "contato", "endereco", "tempo_atuacao", "origem",
             "latitude", "longitude", "utm_zone", "utm_easting", "utm_northing",
             "area_m2", "situacao_fundiaria", "agua", "energia", "acesso", "infra",
-            "cultivos", "sistema_cultivo", "fertilizantes", "controle_pragas", "destino", "periodicidade",
+            "cultivos", "hortalicas_detalhadas", "sistema_cultivo", "fertilizantes", "controle_pragas", "destino", "periodicidade",
             "mao_obra", "num_pessoas", "associacao", "assistencia_tecnica",
             "renda", "programas", "dificuldades",
             "destino_residuos", "agrotoxico", "conservacao", "interacao",
@@ -581,6 +687,13 @@
             updateUTM();
             const outros = document.querySelector('input[name="cultivos_outros"]');
             if (outros) outros.value = '';
+            // reset da área de hortaliças
+            toggleHortalicasDetail();
+            handleOutraHort();
+            const hortChecks = document.querySelectorAll('input[name="hortalicas_espec"]');
+            hortChecks.forEach(cb => cb.checked = false);
+            outraHortText.value = '';
+            outraHortText.disabled = true;
         }
     }
 
