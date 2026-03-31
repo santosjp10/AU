@@ -264,6 +264,9 @@
             background: #e67e22;
         }
         .btn-action:active { transform: scale(0.97); }
+        .danger-btn {
+            background: #b33;
+        }
         small {
             display: block;
             text-align: center;
@@ -273,13 +276,9 @@
             background: #fafdf8;
             border-top: 1px solid #e2efdc;
         }
-        .clear-saved {
-            background: none;
-            border: none;
+        .warning-text {
             color: #b33;
-            text-decoration: underline;
-            font-size: 0.7rem;
-            cursor: pointer;
+            font-weight: 500;
         }
     </style>
 </head>
@@ -307,7 +306,7 @@
         </div>
     </div>
 
-    <!-- Abas -->
+    <!-- Abas (agora com 8 abas) -->
     <div class="tabs" id="tabHeaders">
         <button class="tab-btn active" data-tab="tab1">1. Identif.</button>
         <button class="tab-btn" data-tab="tab2">2. Área/Infra</button>
@@ -316,6 +315,7 @@
         <button class="tab-btn" data-tab="tab5">5. Socioecon.</button>
         <button class="tab-btn" data-tab="tab6">6. Ambiental</button>
         <button class="tab-btn" data-tab="tab7">7. Expectativas</button>
+        <button class="tab-btn" data-tab="tab8">8. Gerenciar</button>
     </div>
 
     <form id="diagnosticForm">
@@ -432,24 +432,43 @@
                 <div class="form-row"><label>Observações gerais</label><textarea name="observacoes" rows="2"></textarea></div>
             </fieldset>
         </div>
+        <!-- Aba 8 - Gerenciar (apenas botões de limpeza) -->
+        <div id="tab8" class="tab-content">
+            <fieldset><legend>🛠️ Gerenciar dados</legend>
+                <div class="form-row">
+                    <label>📊 Registros salvos atualmente:</label>
+                    <div style="font-size: 1.8rem; font-weight: bold; color: #2e7d32; text-align: center; margin: 10px 0;">
+                        <span id="savedCountManage">0</span>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <button type="button" id="clearFormBtnManage" class="btn-action btn-secondary">🗑️ Limpar formulário atual</button>
+                </div>
+                <div class="form-row">
+                    <button type="button" id="clearAllRecordsBtnManage" class="btn-action danger-btn">⚠️ Apagar TODOS os registros salvos</button>
+                </div>
+                <div class="form-row">
+                    <small class="warning-text">ATENÇÃO: As ações acima são irreversíveis. O botão de apagar registros remove todos os diagnósticos armazenados no navegador.</small>
+                </div>
+            </fieldset>
+        </div>
         <input type="hidden" id="utmZoneHidden" name="utm_zone">
         <input type="hidden" id="eastingHidden" name="utm_easting">
         <input type="hidden" id="northingHidden" name="utm_northing">
     </form>
 
-    <!-- Barra de status dos registros salvos -->
+    <!-- Barra de informações simplificada (apenas contador) -->
     <div class="info-bar">
         <span>📋 Registros salvos: <strong id="savedCount">0</strong></span>
-        <button id="clearSavedBtn" class="clear-saved">🗑️ Limpar todos os registros</button>
+        <span style="font-size: 0.7rem;">⚙️ Gerenciar na aba 8</span>
     </div>
 
-    <!-- Botões de ação -->
+    <!-- Barra de ações (apenas salvar e exportar) -->
     <div class="action-bar">
         <button type="button" id="saveRecordBtn" class="btn-action btn-save">💾 Salvar este registro</button>
         <button type="button" id="exportAllBtn" class="btn-action btn-export-all">📎 Exportar TODOS os registros</button>
-        <button type="button" id="clearFormBtn" class="btn-action btn-secondary">🗑️ Limpar formulário</button>
     </div>
-    <small>✔️ Preencha os dados e clique em "Salvar este registro". Depois use "Exportar TODOS os registros" para gerar um CSV com todos os diagnósticos. Os dados ficam salvos localmente até serem apagados.</small>
+    <small>✔️ Preencha os dados e clique em "Salvar este registro". Use "Exportar TODOS os registros" para gerar um CSV. As opções de limpeza estão na aba "8. Gerenciar".</small>
 </div>
 
 <script>
@@ -533,7 +552,6 @@
             hortalicasDetailDiv.style.display = 'block';
         } else {
             hortalicasDetailDiv.style.display = 'none';
-            // limpar seleções quando desmarcar
             const hortChecks = document.querySelectorAll('input[name="hortalicas_espec"]');
             hortChecks.forEach(cb => cb.checked = false);
             outraHortText.value = '';
@@ -552,7 +570,6 @@
 
     hortalicasCheck.addEventListener('change', toggleHortalicasDetail);
     outraHortCheck.addEventListener('change', handleOutraHort);
-    // inicialização
     toggleHortalicasDetail();
     handleOutraHort();
 
@@ -574,14 +591,12 @@
         for (let [name, vals] of checkboxGroups.entries()) {
             data[name] = vals.join('; ');
         }
-        // lat/lon/utm
         data['latitude'] = document.getElementById('lat').value;
         data['longitude'] = document.getElementById('lon').value;
         data['utm_zone'] = document.getElementById('utmZone').value;
         data['utm_easting'] = document.getElementById('easting').value;
         data['utm_northing'] = document.getElementById('northing').value;
         
-        // Tratamento especial: se hortaliças estiver marcada, coletar as específicas
         if (hortalicasCheck.checked) {
             let hortEspec = [];
             const hortChecks = document.querySelectorAll('input[name="hortalicas_espec"]:checked');
@@ -595,16 +610,11 @@
                     hortEspec.push(cb.value);
                 }
             });
-            if (hortEspec.length > 0) {
-                data['hortalicas_detalhadas'] = hortEspec.join('; ');
-            } else {
-                data['hortalicas_detalhadas'] = 'Sim (sem detalhes)';
-            }
+            data['hortalicas_detalhadas'] = hortEspec.length ? hortEspec.join('; ') : 'Sim (sem detalhes)';
         } else {
             data['hortalicas_detalhadas'] = '';
         }
         
-        // cultivos_outros merge
         if (data.cultivos_outros && data.cultivos_outros.trim() !== "") {
             let cult = data.cultivos || "";
             if (cult) cult += "; Outros: " + data.cultivos_outros;
@@ -631,21 +641,24 @@
         const records = getSavedRecords();
         records.push(record);
         localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
-        updateSavedCount();
+        updateSavedCounters();
         alert("Registro salvo com sucesso!");
     }
 
     function clearAllRecords() {
-        if (confirm("Tem certeza que deseja apagar TODOS os registros salvos?")) {
+        if (confirm("⚠️ ATENÇÃO: Esta ação apagará TODOS os registros salvos permanentemente. Continuar?")) {
             localStorage.removeItem(STORAGE_KEY);
-            updateSavedCount();
+            updateSavedCounters();
             alert("Todos os registros foram removidos.");
         }
     }
 
-    function updateSavedCount() {
+    function updateSavedCounters() {
         const count = getSavedRecords().length;
-        document.getElementById('savedCount').innerText = count;
+        const savedSpan = document.getElementById('savedCount');
+        const savedManageSpan = document.getElementById('savedCountManage');
+        if (savedSpan) savedSpan.innerText = count;
+        if (savedManageSpan) savedManageSpan.innerText = count;
     }
 
     // ====================== EXPORTAÇÃO DE TODOS OS REGISTROS =======================
@@ -660,7 +673,7 @@
             "latitude", "longitude", "utm_zone", "utm_easting", "utm_northing",
             "area_m2", "situacao_fundiaria", "agua", "energia", "acesso", "infra",
             "cultivos", "hortalicas_detalhadas", "sistema_cultivo", "fertilizantes", "controle_pragas", "destino", "periodicidade",
-            "interesse_vendas_online",  // NOVO CAMPO
+            "interesse_vendas_online",
             "mao_obra", "num_pessoas", "associacao", "assistencia_tecnica",
             "renda", "programas", "dificuldades",
             "destino_residuos", "agrotoxico", "conservacao", "interacao",
@@ -697,7 +710,6 @@
             updateUTM();
             const outros = document.querySelector('input[name="cultivos_outros"]');
             if (outros) outros.value = '';
-            // reset da área de hortaliças
             toggleHortalicasDetail();
             handleOutraHort();
             const hortChecks = document.querySelectorAll('input[name="hortalicas_espec"]');
@@ -722,12 +734,13 @@
     document.getElementById('calcUtmBtn').addEventListener('click', updateUTM);
     document.getElementById('saveRecordBtn').addEventListener('click', saveCurrentRecord);
     document.getElementById('exportAllBtn').addEventListener('click', exportAllToCSV);
-    document.getElementById('clearFormBtn').addEventListener('click', clearForm);
-    document.getElementById('clearSavedBtn').addEventListener('click', clearAllRecords);
+    // Botões na aba de gerenciamento
+    document.getElementById('clearFormBtnManage').addEventListener('click', clearForm);
+    document.getElementById('clearAllRecordsBtnManage').addEventListener('click', clearAllRecords);
     document.getElementById('lat').addEventListener('input', updateUTM);
     document.getElementById('lon').addEventListener('input', updateUTM);
     updateUTM();
-    updateSavedCount();
+    updateSavedCounters();
 
     // Controle de abas
     const tabs = document.querySelectorAll('.tab-btn');
